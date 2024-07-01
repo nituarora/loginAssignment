@@ -48,7 +48,7 @@ const App: React.FC = () => {
     }
   };
 
-  //  JSX code for error message 
+  //  JSX code for error message  
   const renderErrorMessage = (name: string) =>
     name === errorMessages.name && (
       <div className="error">{errorMessages.message}</div>
