@@ -1,5 +1,4 @@
-import React, { useState, FormEvent, useEffect } from "react";
-import Cookies from "js-cookie";
+import React, { useState, FormEvent } from "react";
 import "./style.css";
 
 type ErrorMessages = {
@@ -10,17 +9,13 @@ type ErrorMessages = {
 const App: React.FC = () => {
   const [errorMessages, setErrorMessages] = useState<Partial<ErrorMessages>>({});
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
-  const [loggedUser, setLoggedUser] = useState<String|null>(null);
+  const [loggedUser, setLoggedUser] = useState<String>();
 
   // hard-coded credentials
   const database = [
     {
       username: "janis",
       password: "janis123"
-    },
-    {
-      username: "nitu",
-      password: "nitu123"
     }
   ];
 
@@ -28,15 +23,6 @@ const App: React.FC = () => {
     uname: "Invalid username",
     pass: "Invalid password"
   };
-
-  useEffect(() => {
-    // Check cookies for login state
-    const storedUser = Cookies.get("loggedUser");
-    if (storedUser) {
-      setLoggedUser(storedUser);
-      setIsSubmitted(true);
-    }
-  }, []);
 
   const handleSubmit = (event: FormEvent) => {
     // Prevent page reload
@@ -55,19 +41,11 @@ const App: React.FC = () => {
       } else {
         setLoggedUser(userData.username)
         setIsSubmitted(true);
-        //set cookies
-        Cookies.set("loggedUser", userData.username, { expires: 7 });
       }
     } else {
       // Username not found
       setErrorMessages({ name: "uname", message: errors.uname});
     }
-  };
-
-  const handleLogout = () => {
-    setLoggedUser(null);
-    setIsSubmitted(false);
-    Cookies.remove("loggedUser");
   };
 
   //  JSX code for error message   
@@ -100,16 +78,13 @@ const App: React.FC = () => {
   return (
     <div className="main">
       <div className="form">
-        <div className="title">Sign In
-        {isSubmitted && <button className="logout-button" onClick={handleLogout}>Logout</button>}
-        </div>
-        {isSubmitted ? <div>{loggedUser} is successfully logged in</div> : renderForm}
+        <div className="title">Sign In</div>
+        {isSubmitted ? <div>User is successfully logged in</div> : renderForm}
          {/* Add note about valid username and password */}
           {!isSubmitted && <div className="note">
             <p><strong>Note:</strong> Use the following credentials to login:</p>
             <ul>
               <li>Username: <code>janis</code>, Password: <code>janis123</code></li>
-              <li>Username: <code>nitu</code>, Password: <code>nitu123</code></li>
             </ul>
           </div>}
       </div>
